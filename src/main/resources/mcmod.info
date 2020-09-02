@@ -1,0 +1,15 @@
+[
+  {
+    "modid": "gcaddon",
+    "name": "GCAddon",
+    "description": "Tutorial Galacticraft Addon",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["ROMVoid95"],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": []
+  }
+]

@@ -1,0 +1,132 @@
+buildscript {
+    repositories {
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+		maven {
+			url 'https://plugins.gradle.org/m2/'
+		}
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+		classpath "gradle.plugin.com.matthewprenger:CurseGradle:1.4.0"
+        
+    }
+}
+
+plugins {
+	  id 'eclipse'
+	  id 'idea'
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'com.matthewprenger.cursegradle'
+
+def mcVersion="1.12.2"
+def forgeVersion="14.23.5.2847"
+
+version = "${mcVersion}-1.0.0"
+group= "net.rom.addontutorial" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "GCAddon"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+minecraft {
+    version = "${mcVersion}-${forgeVersion}"
+    runDir = "run"
+    mappings = "snapshot_20171003"
+    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+}
+
+String GCBuild = "261"
+String GCVersion = "1.12.2-4.0.2.${GCBuild}"
+
+repositories {
+	ivy {
+		url "https://micdoodle8.com/new-builds/"
+		layout 'pattern', {
+			artifact "[organization]/${GCBuild}/[module]-[revision].jar"
+		}
+		metadataSources {
+			artifact()
+		}
+	}
+    maven {
+		name = 'curseforge'
+		url = 'https://minecraft.curseforge.com/api/maven/'
+	}   
+}
+
+dependencies {
+
+	compile "GC-1.12-dev:GalacticraftCore-Dev:${GCVersion}"
+	compile "GC-1.12-dev:Galacticraft-API:${GCVersion}"
+	compile "GC-1.12-dev:Galacticraft-Planets-Dev:${GCVersion}"
+	compile "GC-1.12-dev:MicdoodleCore-Dev:${GCVersion}"
+	
+}
+
+processResources {
+
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+		expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+    
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
+task apiJar(type: Jar) {
+    from(sourceSets.main.output) {
+        include "net/rom/addontutorial/api/**"
+    }
+	from(sourceSets.main.java) {
+        include "net/rom/addontutorial/api/**"
+    }
+    classifier = 'api'
+}
+
+task signJar(type: SignJar, dependsOn: reobfJar) {
+    onlyIf {
+        project.hasProperty('keyStore')
+    }
+    keyStore = project.findProperty('keyStore')
+    alias = project.findProperty('keyStoreAlias')
+    storePass = project.findProperty('keyStorePass')
+    keyPass = project.findProperty('keyStoreKeyPass')
+    inputFile = jar.archivePath
+    outputFile = jar.archivePath
+}
+
+curseforge {
+    if (project.hasProperty('curseforge_key')){
+		apiKey = project.findProperty("curseforge_key")
+		project {
+			id = "PROJECT-ID"
+			releaseType = "release"
+			addGameVersion "${mcVersion}"
+			mainArtifact(jar) {
+				//relations {
+				//	requiredLibrary 'some-coremod'
+				//}
+			}
+			addArtifact(apiJar)
+			addArtifact(deobfJar)
+		}
+	}
+}
+
+build.dependsOn signJar
+tasks.build.dependsOn signJar
+tasks.curseforge.dependsOn build
