@@ -40,6 +40,16 @@ minecraft {
     makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
+idea.module {
+    inheritOutputDirs=true
+    downloadJavadoc = true
+    iml {
+        whenMerged { module ->
+            module.dependencies*.exported = true
+        }
+    }
+}
+
 String GCBuild = "261"
 String GCVersion = "1.12.2-4.0.2.${GCBuild}"
 

@@ -1,22 +1,19 @@
 package net.rom.addontutorial.moon;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import net.rom.addontutorial.AddonConfig;
-import net.rom.addontutorial.dimension.AddonDimensions;
-import net.rom.addontutorial.planets.AddonCelestialBodies;
-
+import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
+import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
+import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.rom.addontutorial.AddonConfig;
+import net.rom.addontutorial.dimension.AddonDimensions;
+import net.rom.addontutorial.planets.AddonCelestialBodies;
 
-import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
-import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
-
-import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WorldProviderPlanetOneMoon extends WorldProviderSpace {
 

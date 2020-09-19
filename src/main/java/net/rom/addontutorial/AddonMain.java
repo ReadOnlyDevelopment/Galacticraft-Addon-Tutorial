@@ -1,14 +1,7 @@
 package net.rom.addontutorial;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import net.rom.addontutorial.dimension.AddonDimensions;
-import net.rom.addontutorial.planets.AddonCelestialBodies;
-import net.rom.addontutorial.proxy.Proxy;
-import net.rom.addontutorial.util.Utils;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -17,16 +10,22 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.rom.addontutorial.dimension.AddonDimensions;
+import net.rom.addontutorial.planets.AddonCelestialBodies;
+import net.rom.addontutorial.proxy.Proxy;
+import net.rom.addontutorial.util.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(
-		modid = Constants.modID,
-		name = Constants.modName,
-		version = Constants.modVersion,
-		dependencies = Constants.DEPENDENCIES_FORGE + Constants.DEPENDENCIES_MODS,
-		certificateFingerprint = Constants.CERTIFICATEFINGERPRINT)
+		modid = Const.modID,
+		name = Const.modName,
+		version = Const.modVersion,
+		dependencies = Const.DEPENDENCIES_FORGE + Const.DEPENDENCIES_MODS,
+		certificateFingerprint = Const.CERTIFICATEFINGERPRINT)
 public class AddonMain {
 
-	public static final Logger LOGGER   = LogManager.getLogger(Constants.modID);
+	public static final Logger LOGGER   = LogManager.getLogger(Const.modID);
 	public static AddonMain    INSTANCE = new AddonMain();
 
 	@SidedProxy(

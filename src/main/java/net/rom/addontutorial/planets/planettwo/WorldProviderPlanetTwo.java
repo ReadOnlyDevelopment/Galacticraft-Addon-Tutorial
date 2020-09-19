@@ -1,26 +1,23 @@
 package net.rom.addontutorial.planets.planettwo;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import net.rom.addontutorial.AddonConfig;
-import net.rom.addontutorial.dimension.AddonDimensions;
-import net.rom.addontutorial.planets.AddonCelestialBodies;
-
+import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
+import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
+import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import micdoodle8.mods.galacticraft.api.world.ISolarLevel;
+import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
+import micdoodle8.mods.galacticraft.planets.mars.world.gen.BiomeProviderMars;
+import micdoodle8.mods.galacticraft.planets.mars.world.gen.ChunkProviderMars;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.biome.BiomeProvider;
 import net.minecraft.world.gen.IChunkGenerator;
+import net.rom.addontutorial.AddonConfig;
+import net.rom.addontutorial.dimension.AddonDimensions;
+import net.rom.addontutorial.planets.AddonCelestialBodies;
 
-import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
-import micdoodle8.mods.galacticraft.api.prefab.world.gen.WorldProviderSpace;
-import micdoodle8.mods.galacticraft.api.vector.Vector3;
-import micdoodle8.mods.galacticraft.api.world.ISolarLevel;
-
-import micdoodle8.mods.galacticraft.planets.mars.blocks.MarsBlocks;
-import micdoodle8.mods.galacticraft.planets.mars.world.gen.BiomeProviderMars;
-import micdoodle8.mods.galacticraft.planets.mars.world.gen.ChunkProviderMars;
+import java.util.LinkedList;
+import java.util.List;
 
 public class WorldProviderPlanetTwo extends WorldProviderSpace implements ISolarLevel {
 

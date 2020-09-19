@@ -1,6 +1,6 @@
 package net.rom.addontutorial;
 
-public final class Constants {
+public final class Const {
    public static final String modID = "gcaddon";
    public static final String modName = "GCAddon";
    public static final String modVersion = "1.0.0";

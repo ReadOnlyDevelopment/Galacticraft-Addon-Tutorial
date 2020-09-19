@@ -1,27 +1,39 @@
 package net.rom.addontutorial.planets;
 
-import net.rom.addontutorial.AddonConfig;
-import net.rom.addontutorial.AddonConfig.Dimension;
-import net.rom.addontutorial.AddonConfig.PlanetSettings;
-import net.rom.addontutorial.moon.WorldProviderPlanetOneMoon;
-import net.rom.addontutorial.planets.planetone.WorldProviderPlanetOne;
-import net.rom.addontutorial.planets.planettwo.WorldProviderPlanetTwo;
-import net.rom.addontutorial.spacestation.WorldProviderPlanetTwoStation;
-import net.rom.addontutorial.util.GCRegister;
-
+import micdoodle8.mods.galacticraft.api.GalacticraftRegistry;
+import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
+import micdoodle8.mods.galacticraft.api.galaxies.GalaxyRegistry;
 import micdoodle8.mods.galacticraft.api.galaxies.Moon;
 import micdoodle8.mods.galacticraft.api.galaxies.Planet;
 import micdoodle8.mods.galacticraft.api.galaxies.Satellite;
 import micdoodle8.mods.galacticraft.api.galaxies.SolarSystem;
+import micdoodle8.mods.galacticraft.api.galaxies.Star;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
+import micdoodle8.mods.galacticraft.api.world.AtmosphereInfo;
 import micdoodle8.mods.galacticraft.api.world.EnumAtmosphericGas;
-
+import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.dimension.TeleportTypeMoon;
 import micdoodle8.mods.galacticraft.core.dimension.TeleportTypeSpaceStation;
-
+import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedCreeper;
+import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedEnderman;
+import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSkeleton;
+import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedSpider;
+import micdoodle8.mods.galacticraft.core.entities.EntityEvolvedZombie;
+import micdoodle8.mods.galacticraft.core.world.gen.BiomeOrbit;
 import micdoodle8.mods.galacticraft.planets.mars.dimension.TeleportTypeMars;
-import micdoodle8.mods.galacticraft.planets.mars.world.gen.BiomeMars;
-import micdoodle8.mods.galacticraft.planets.venus.world.gen.BiomeVenus;;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome.SpawnListEntry;
+import net.rom.addontutorial.AddonConfig;
+import net.rom.addontutorial.AddonConfig.Dimension;
+import net.rom.addontutorial.AddonConfig.PlanetSettings;
+import net.rom.addontutorial.Const;
+import net.rom.addontutorial.moon.WorldProviderPlanetOneMoon;
+import net.rom.addontutorial.planets.planetone.WorldProviderPlanetOne;
+import net.rom.addontutorial.planets.planetone.biome.PlanetOneBiomes;
+import net.rom.addontutorial.planets.planettwo.WorldProviderPlanetTwo;
+import net.rom.addontutorial.spacestation.WorldProviderPlanetTwoStation;
+
+;
 
 /**
  * Class AddonCelestialBodies
@@ -32,46 +44,20 @@ import micdoodle8.mods.galacticraft.planets.venus.world.gen.BiomeVenus;;
  * 
  * Each field can be called from other classes directly
  * 
- * The class uses a custom builder for our Celestial Objects, each builder
- * method is documented with what the paremeters are
- * 
- * @see net.rom.addontutorial.util.GCRegister
- * 
  */
 public class AddonCelestialBodies {
 
-	/**
-	 * custom solar system
-	 * 
-	 * @implNote remember this does not set the name of the solar system
-	 */
+	// Systems
 	public static SolarSystem customSystem;
 
-	/**
-	 * Planet PlanetOne
-	 * 
-	 * @implNote remember this does not set the name of the planet
-	 */
+	// Planets
 	public static Planet planetOne;
-
-	/**
-	 * Planet PlanetTwo
-	 * 
-	 * @implNote remember this does not set the name of the planet
-	 */
 	public static Planet planetTwo;
 
-	/**
-	 * moon for PlanetOne
-	 * 
-	 * @implNote remember this does not set the name of the moon
-	 */
+	// Moons
 	public static Moon planetOneMoon;
 
-	/**
-	 * space-station for PlanetTwo
-	 *
-	 */
+	// SpaceStations
 	public static Satellite planetTwoSpaceStation;
 
 	/**
@@ -98,7 +84,6 @@ public class AddonCelestialBodies {
 		// same goes for space station
 		registerSpaceStation_4th_Task();
 
-		setAtomosphereInfo();
 		registerAll();
 		setTeleportsAndGuis();
 	}
@@ -106,10 +91,10 @@ public class AddonCelestialBodies {
 	/**
 	 * Register solar systems.
 	 * 
-	 * These must be created first so we can add our planets to the new system.
-	 * If these are not created first then we will get a NullPointExemption
-	 * crash when loading gets to the planets since it cannot find a system
-	 * that has not been created yet.
+	 * These must be created first so we can add our planets to the new system. If
+	 * these are not created first then we will get a NullPointExemption crash when
+	 * loading gets to the planets since it cannot find a system that has not been
+	 * created yet.
 	 * 
 	 */
 	private static void registerSolarSystems_1st_Task() {
@@ -119,7 +104,10 @@ public class AddonCelestialBodies {
 
 		// its also important to always have the 3rd Vector3 float set to 0.0F, so the
 		// solar system zoom actually zooms in on the system
-		customSystem = GCRegister.buildSolarSystem("custom_system", "milky_way", new Vector3(2.0F, -1.7f, 0.0f), "custom_star");
+		customSystem = new SolarSystem("custom_system", "milky_way").setMapPosition(new Vector3(1.0F, -1.4f, 0.0f));
+		Star starSol = (Star) new Star("custom_star").setParentSolarSystem(customSystem).setTierRequired(-1);
+		starSol.setBodyIcon(new ResourceLocation(Constants.ASSET_PREFIX, "textures/gui/celestialbodies/sun.png"));
+		customSystem.setMainStar(starSol);
 	}
 
 	/**
@@ -127,17 +115,34 @@ public class AddonCelestialBodies {
 	 */
 	private static void registerPlanets_2nd_Task() {
 
-		// to keep the builder parameters shorter i chose to set the ring color outside
-		// of the builder
-
 		// build planetOne
-		planetOne = GCRegister.buildPlanet(customSystem, "planet_one", WorldProviderPlanetOne.class, 1.0F, dim.idPlanetOne, pl.planetOneTier, 4.0F, 2.0f, 1.5F);
-		planetOne.setRingColorRGB(0.9F, 0.1F, 0.6F);
-		GCRegister.setBiomes(planetOne, BiomeMars.marsFlat);
-		// buildPlanetTwo
-		planetTwo = GCRegister.buildPlanet(customSystem, "planet_two", WorldProviderPlanetTwo.class, 1.0F, dim.idPlanetTwo, pl.planetTwoTier, 1.8F, 3.7f, 4.5F);
-		planetOne.setRingColorRGB(0.9F, 0.1F, 0.6F);
-		GCRegister.setBiomes(planetTwo, BiomeVenus.venusValley, BiomeVenus.venusMountain, BiomeVenus.venusFlat);
+		planetOne = new Planet("planet_one").setParentSolarSystem(customSystem);
+		planetOne.setTierRequired(3);
+		planetOne.setRingColorRGB(0.1F, 0.9F, 0.6F);
+		planetOne.setPhaseShift(1.45F);
+		planetOne.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(1.0F, 1.0F));
+		planetOne.setRelativeOrbitTime(1.0F);
+		planetOne.atmosphereComponent(EnumAtmosphericGas.HYDROGEN);
+		planetOne.setBodyIcon(new ResourceLocation(Const.ASSET_PREFIX, "textures/gui/celestialbodies/planetOne.png"));
+		planetOne.setDimensionInfo(dim.idPlanetOne, WorldProviderPlanetOne.class);
+		planetOne.setAtmosphere(new AtmosphereInfo(false, false, false, 5.0F, 0.0F, 0.1F));
+		planetOne.addChecklistKeys("space_suit", "equip_oxygen_suit", "equip_parachute");
+		planetOne.setBiomeInfo(PlanetOneBiomes.planetOne, PlanetOneBiomes.planetOne_sea);
+		setMobInfo(planetOne);
+
+		// build planetTwo
+		planetTwo = new Planet("planet_one").setParentSolarSystem(customSystem);
+		planetTwo.setTierRequired(3);
+		planetTwo.setRingColorRGB(0.1F, 0.9F, 0.6F);
+		planetTwo.setPhaseShift(1.45F);
+		planetTwo.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(1.5F, 1.5F));
+		planetTwo.setRelativeOrbitTime(1.0F);
+		planetTwo.atmosphereComponent(EnumAtmosphericGas.HYDROGEN);
+		planetTwo.setBodyIcon(new ResourceLocation(Const.ASSET_PREFIX, "textures/gui/celestialbodies/planetTwo.png"));
+		planetTwo.setDimensionInfo(dim.idPlanetTwo, WorldProviderPlanetTwo.class);
+		planetTwo.setAtmosphere(new AtmosphereInfo(false, false, false, 5.0F, 0.0F, 0.1F));
+		planetTwo.addChecklistKeys("space_suit", "equip_oxygen_suit", "equip_parachute");
+		setMobInfo(planetTwo);
 
 	}
 
@@ -146,8 +151,20 @@ public class AddonCelestialBodies {
 	 */
 	private static void registerMoon_3rd_Task() {
 
-		planetOneMoon = GCRegister.buildMoon(planetOne, "planet_one_moon", WorldProviderPlanetOneMoon.class, dim.idMoon, pl.planetOneTier, 4.55F, 1.0F, 0.5F, 0.95F);
-		planetOne.setRingColorRGB(0.1F, 0.1F, 0.6F);
+		planetOneMoon = new Moon("planet_one_moon").setParentPlanet(planetOne);
+		planetOneMoon.setPhaseShift(2.436F);
+		planetOneMoon.setRingColorRGB(0.1F, 0.1F, 0.6F);
+		planetOneMoon.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(9F, 9F));
+		planetOneMoon.setRelativeOrbitTime(75.0F);
+		planetOneMoon.setTierRequired(7);
+		planetOneMoon.setRelativeSize(0.3867F);
+		planetOneMoon.atmosphereComponent(EnumAtmosphericGas.HYDROGEN).atmosphereComponent(EnumAtmosphericGas.HELIUM).atmosphereComponent(EnumAtmosphericGas.METHANE);
+		planetOneMoon.setBodyIcon(new ResourceLocation(Const.ASSET_PREFIX , "textures/gui/celestialbodies/planetOneMoon.png"));
+		planetOneMoon.setDimensionInfo(dim.idMoon, WorldProviderPlanetOneMoon.class);
+		planetOneMoon.setAtmosphere(new AtmosphereInfo(false, false, false, 5.0F, 0.0F, 0.2F));
+		planetOneMoon.addChecklistKeys("space_suit", "equip_oxygen_suit", "equip_parachute");
+		//TRITON.setBiomeInfo(TritonBiomes.triton, TritonBiomes.tritonIceLands, TritonBiomes.tritonIceSea);
+		
 	}
 
 	/**
@@ -155,42 +172,45 @@ public class AddonCelestialBodies {
 	 */
 	private static void registerSpaceStation_4th_Task() {
 
-		planetTwoSpaceStation = GCRegister.buildSpaceStation(planetTwo, WorldProviderPlanetTwoStation.class, dim.idSpaceStation, dim.StaticidSpaceStation, 0.8411561F, 1.0F, 5.5F, 2.0F, false, null);
-		planetOne.setRingColorRGB(0.1F, 0.1F, 0.6F);
+		planetTwoSpaceStation = new Satellite("space_station.eris").setParentBody(planetTwo);
+		planetTwoSpaceStation.setRelativeSize(0.2667F);
+		planetTwoSpaceStation.setRelativeDistanceFromCenter(new CelestialBody.ScalableDistance(5.5F, 5.5F));
+		planetTwoSpaceStation.setRelativeOrbitTime(20.0F);
+		planetTwoSpaceStation.setTierRequired(planetTwo.getTierRequirement());
+		planetTwoSpaceStation.setDimensionInfo(dim.idSpaceStation, dim.StaticidSpaceStation, WorldProviderPlanetTwoStation.class);
+		planetTwoSpaceStation.setBodyIcon(new ResourceLocation("galacticraftcore:textures/gui/celestialbodies/space_station.png"));
+		planetTwoSpaceStation.addChecklistKeys("equip_oxygen_suit", "equip_parachute");
+		planetTwoSpaceStation.setBiomeInfo(BiomeOrbit.space);
 	}
 
-	private static void setAtomosphereInfo() {
-		
-		// Lets set the gasses that will be in our planets atmospheres
-		EnumAtmosphericGas[] planetOneGases = { EnumAtmosphericGas.NITROGEN, EnumAtmosphericGas.ARGON };
-		EnumAtmosphericGas[] planetTwoGases = { EnumAtmosphericGas.METHANE, EnumAtmosphericGas.WATER };
-		
-		// Now lets add the above arrays to the planets
-		GCRegister.setAtmosphereComponentList(planetOne, planetOneGases);
-		GCRegister.setAtmosphereComponentList(planetTwo, planetTwoGases);
-
-		GCRegister.setAtmosphere(planetOne, false, false, true, 2.0F, 5.0F, 3.0F);
-		GCRegister.setAtmosphere(planetTwo, false, false, false, 0.0F, 1.0F, 15.0F);
+	private static void setMobInfo(CelestialBody body) {
+		body.addMobInfo(new SpawnListEntry(EntityEvolvedZombie.class, 8, 2, 3));
+		body.addMobInfo(new SpawnListEntry(EntityEvolvedSpider.class, 8, 2, 3));
+		body.addMobInfo(new SpawnListEntry(EntityEvolvedSkeleton.class, 8, 2, 3));
+		body.addMobInfo(new SpawnListEntry(EntityEvolvedCreeper.class, 8, 2, 3));
+		body.addMobInfo(new SpawnListEntry(EntityEvolvedEnderman.class, 10, 1, 4));
 	}
 
 	private static void setTeleportsAndGuis() {
-		// registerTeleportType is pretty important. If we don't set one for our planets then 
+		// registerTeleportType is pretty important. If we don't set one for our planets
+		// then
 		// you will not be able to travel to said planet.
-		
-		GCRegister.registerTeleportType(WorldProviderPlanetOne.class, new TeleportTypeMars());
-		GCRegister.registerTeleportType(WorldProviderPlanetTwo.class, new TeleportTypeMoon());
-		GCRegister.registerTeleportType(WorldProviderPlanetTwoStation.class, new TeleportTypeSpaceStation());
-		GCRegister.registerTeleportType(WorldProviderPlanetOneMoon.class, new TeleportTypeMars());
+
+		GalacticraftRegistry.registerTeleportType(WorldProviderPlanetOne.class, new TeleportTypeMars());
+		GalacticraftRegistry.registerTeleportType(WorldProviderPlanetTwo.class, new TeleportTypeMoon());
+		GalacticraftRegistry.registerTeleportType(WorldProviderPlanetTwoStation.class, new TeleportTypeSpaceStation());
+		GalacticraftRegistry.registerTeleportType(WorldProviderPlanetOneMoon.class, new TeleportTypeMars());
 	}
 
 	private static void registerAll() {
 		// Now we register each Celestial Body after we have created and defined them
-		
-		GCRegister.registerSolarSystem(customSystem);
-		GCRegister.registerPlanet(planetOne);
-		GCRegister.registerPlanet(planetTwo);
-		GCRegister.registerMoon(planetOneMoon);
-		GCRegister.registerSpaceStation(planetTwoSpaceStation);
+
+		GalaxyRegistry.registerSolarSystem(customSystem);
+		GalaxyRegistry.registerSolarSystem(customSystem);
+		GalaxyRegistry.registerPlanet(planetOne);
+		GalaxyRegistry.registerPlanet(planetTwo);
+		GalaxyRegistry.registerMoon(planetOneMoon);
+		GalaxyRegistry.registerSatellite(planetTwoSpaceStation);
 
 	}
 

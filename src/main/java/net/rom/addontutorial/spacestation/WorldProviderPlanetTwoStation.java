@@ -1,23 +1,19 @@
 package net.rom.addontutorial.spacestation;
 
-import net.rom.addontutorial.AddonConfig;
-import net.rom.addontutorial.dimension.AddonDimensions;
-import net.rom.addontutorial.planets.AddonCelestialBodies;
-
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.DimensionType;
-import net.minecraft.world.gen.IChunkGenerator;
-
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
 import micdoodle8.mods.galacticraft.api.galaxies.CelestialBody;
 import micdoodle8.mods.galacticraft.api.vector.Vector3;
-
 import micdoodle8.mods.galacticraft.core.Constants;
 import micdoodle8.mods.galacticraft.core.dimension.WorldProviderOverworldOrbit;
 import micdoodle8.mods.galacticraft.core.util.ConfigManagerCore;
 import micdoodle8.mods.galacticraft.core.world.gen.ChunkProviderOrbit;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.gen.IChunkGenerator;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.rom.addontutorial.AddonConfig;
+import net.rom.addontutorial.dimension.AddonDimensions;
+import net.rom.addontutorial.planets.AddonCelestialBodies;
 
 public class WorldProviderPlanetTwoStation extends WorldProviderOverworldOrbit {
 	@Override

@@ -11,7 +11,7 @@ import net.minecraftforge.common.config.Config;
  * 
  * https://github.com/SteveKunG/MorePlanets/blob/1.12.2/src/main/java/stevekung/mods/moreplanets/core/config/ConfigManagerMP.java
  */
-@Config(modid = Constants.modID)
+@Config(modid = Const.modID)
 public class AddonConfig {
 
 	@Config.LangKey(value = "addon_general")
