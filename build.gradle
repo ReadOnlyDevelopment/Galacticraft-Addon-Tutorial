@@ -27,7 +27,7 @@ def mcVersion="1.12.2"
 def forgeVersion="14.23.5.2847"
 
 version = "${mcVersion}-1.0.0"
-group= "net.rom.addontutorial" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group= "io.github.gcaddon" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "GCAddon"
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -95,16 +95,6 @@ processResources {
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = 'dev'
-}
-
-task apiJar(type: Jar) {
-    from(sourceSets.main.output) {
-        include "net/rom/addontutorial/api/**"
-    }
-	from(sourceSets.main.java) {
-        include "net/rom/addontutorial/api/**"
-    }
-    classifier = 'api'
 }
 
 task signJar(type: SignJar, dependsOn: reobfJar) {
